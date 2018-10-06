@@ -52,18 +52,14 @@ class Simulation(object):
         -- Once len(population) is the same as self.population_size, returns population.
     '''
 
-    def __init__(self, population_size, vacc_percentage, virus_name,
-                 mortality_rate, basic_repro_num, initial_infected=1):
+    def __init__(self, population_size, vacc_percentage, virus,
+                 initial_infected=1):
         self.population_size = population_size
         self.population = []
         self.total_infected = 0
         self.current_infected = 0
         self.next_person_id = 0
-        self.virus_name = virus_name
-        self.mortality_rate = mortality_rate
-        self.basic_repro_num = basic_repro_num
-        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
-            virus_name, population_size, vacc_percentage, initial_infected)
+        self.virus = virus
 
         # TODO: Create a Logger object and bind it to self.logger.  You should use this
         # logger object to log all events of any importance during the simulation.  Don't forget
@@ -79,6 +75,11 @@ class Simulation(object):
         # TODO: Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
 
+        self.population = self._create_population(initial_infected);
+
+        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus_name, population_size, vacc_percentage, initial_infected)
+
+
     def _create_population(self, initial_infected):
         # TODO: Finish this method!  This method should be called when the simulation
         # begins, to create the population that will be used. This method should return
@@ -89,30 +90,31 @@ class Simulation(object):
         infected_count = 0
         while len(population) != pop_size:
             if infected_count !=  initial_infected:
-                # TODO: Create all the infected people first, and then worry about the rest.
-                # Don't forget to increment infected_count every time you create a
-                # new infected person!
+                person = Person(self.next_person_id, False, self.virus)
+                self.population.append(person)
+                self.next_person_id += 1
+                infected_count += 1
                 pass
             else:
-                # Now create all the rest of the people.
-                # Every time a new person will be created, generate a random number between
-                # 0 and 1.  If this number is smaller than vacc_percentage, this person
-                # should be created as a vaccinated person. If not, the person should be
-                # created as an unvaccinated person.
-                pass
-            # TODO: After any Person object is created, whether sick or healthy,
-            # you will need to increment self.next_person_id by 1. Each Person object's
-            # ID has to be unique!
+                vaxChance = random.uniform(0,1)
+                #Person vaxxed or not based off random chance
+                if vaxChance < self.vacc_percentage: #vaccinated person
+                    person = Person(self.next_person_id, True, None)
+                    self.population.append(person)
+                    self.next_person_id += 1
+                else: #unvaccinated person
+                    person = Person(self.next_person_id, False, None)
+                    self.population.append(person)
+                    self.next_person_id += 1
+        self.current_infected += infected_count
+        self.total_infected += infected_count
         return population
 
     def _simulation_should_continue(self):
-        # TODO: Complete this method!  This method should return True if the simulation
-        # should continue, or False if it should not.  The simulation should end under
-        # any of the following circumstances:
-        #     - The entire population is dead.
-        #     - There are no infected people left in the population.
-        # In all other instances, the simulation should continue.
-        pass
+        if self.population_size == 0 or self.current_infected == 0:
+            return False
+        else:
+            return True
 
     def run(self):
         # TODO: Finish this method.  This method should run the simulation until
