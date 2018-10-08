@@ -43,20 +43,19 @@ class Person(object):
 
 
     def did_survive_infection(self):
-        # TODO:  Finish this method. Follow the instructions in the class documentation
-        # TODO: You will need to decide what parameters you pass into this method based on how you structure your class.
-        # for resolve_infection.  If person dies, set is_alive to False and return False.
-        # If person lives, set is_vaccinated = True, infection = None, return True.
+        if self.is_vaccinated is False and self.infection is None: #case for healthy person
+            return None
 
-        if self.infection is not None:
-            check = random.uniform(0, 1)
-            if check < self.infection:  #needs work
+        if self.infection is not None: #Was person lucky enough to live?
+            luck = random.uniform(0, 1)
+            if luck < self.infection.mortality_rate:  #Nope
                 self.is_alive = False
                 return False
 
-            else:
-                self.is_vaccinated = True
-                self.infection = None
+            else: #Yes
+                self.is_vaccinated = True #because person created own antibodies
+                self.infection = None #and cleared the infection
                 return True
 
-        pass
+         else:
+            return True
