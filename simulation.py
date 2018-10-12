@@ -20,14 +20,8 @@ class Simulation(object):
         # to call these logger methods in the corresponding parts of the simulation!
         self.logger = None
 
-        # This attribute will be used to keep track of all the people that catch
-        # the infection during a given time step. We'll store each newly infected
-        # person's .ID attribute in here.  At the end of each time step, we'll call
-        # self._infect_newly_infected() and then reset .newly_infected back to an empty
-        # list.
+        # track of all the people that catch the infection during a given time step.
         self.newly_infected = []
-        # TODO: Call self._create_population() and pass in the correct parameters.
-        # Store the array that this method will return in the self.population attribute.
 
         self.population = self._create_population(initial_infected);
 
@@ -35,9 +29,7 @@ class Simulation(object):
 
 
     def _create_population(self, initial_infected):
-        # TODO: Finish this method!  This method should be called when the simulation
-        # begins, to create the population that will be used. This method should return
-        # an array filled with Person objects that matches the specifications of the
+        # Returns an array filled with Person objects that matches the specifications of the
         # simulation (correct number of people in the population, correct percentage of
         # people vaccinated, correct number of initially infected people).
         population = []
@@ -84,14 +76,6 @@ class Simulation(object):
         print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
 
     def time_step(self):
-            # - For each infected person in the population:
-            #             - Grab a random person from the population.
-            #           - If the person is dead, continue and grab another new
-            #                 person from the population. Since we don't interact
-            #                 with dead people, this does not count as an interaction.
-            #           - Else:
-            #               - Call simulation.interaction(person, random_person)
-            #               - Increment interaction counter by 1.
 
         number_of_interactions = 1
 
@@ -116,10 +100,7 @@ class Simulation(object):
             self._infect_newly_infected()
 
     def interaction(self, person, random_person):
-        # TODO: Finish this method! This method should be called any time two living
-        # people are selected for an interaction.  That means that only living people
-        # should be passed into this method.  Assert statements are included to make sure
-        # that this doesn't happen.
+        #only living people should be passed into this method.
         assert person1.is_alive == True
         assert random_person.is_alive == True
 
