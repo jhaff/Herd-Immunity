@@ -107,10 +107,11 @@ class Simulation(object):
 
                 number_of_interaction = 1 #reset number of interactions so the for loop can select another person and run again
 
-            else:
-                pass
+            else if person.infection is not None and person.is_alive == True:
+                self.logger.log_infection_survival(person, False)
 
-            self._infect_newly_infected()
+        self._infect_newly_infected()
+
 
     def interaction(self, person, random_person):
         #only living people should be passed into this method.
@@ -130,13 +131,15 @@ class Simulation(object):
                  self.logger.log_interaction(person, random_person, False, False, False)
 
     def _infect_newly_infected(self): #Called at the end of every time step
+        print("infecting newly_infected")
 
         for person in self.newly_infected: #Infect everyone in newly_infected[]
              person.infection = self.virus
              self.total_infected += 1 #increment counters
              self.current_infected += 1
 
-         self.newly_infected = [] #since we are done infecting the newly infected, reset.
+        print(self.newly_infected)
+        self.newly_infected = [] #since we are done infecting the newly infected, reset.
 
 if __name__ == "__main__":
     params = sys.argv[1:]
@@ -149,6 +152,8 @@ if __name__ == "__main__":
         initial_infected = int(params[5])
     else:
         initial_infected = 1
+        
+    virus = Virus(virus_name, mortality_rate, basic_repro_num)
     simulation = Simulation(pop_size, vacc_percentage, virus_name, mortality_rate,
                             basic_repro_num, initial_infected)
     simulation.run()
