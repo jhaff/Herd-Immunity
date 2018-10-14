@@ -1,4 +1,4 @@
-mport random
+import random
 # TODO: Import the virus clase
 
 class Person(object):
@@ -57,5 +57,5 @@ class Person(object):
                 self.infection = None #and cleared the infection
                 return True
 
-         else:
+        else:
             return True

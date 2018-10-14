@@ -1,6 +1,7 @@
 import random, sys
 random.seed(42)
 from person import Person
+from virus import Virus
 from logger import Logger
 
 class Simulation(object):
@@ -14,6 +15,7 @@ class Simulation(object):
         self.current_infected = 0
         self.next_person_id = 0
         self.virus = virus
+        self.vacc_percentage = vacc_percentage
         self.population = self._create_population(initial_infected);
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus_name, population_size, vacc_percentage, initial_infected)
         self.logger = Logger(self.file_name)
@@ -29,13 +31,13 @@ class Simulation(object):
         print("creating population...")
         population = []
         infected_count = 0
-        while len(population) != pop_size:
+        while len(self.population) != pop_size:
+            print("creating person {}".format(len(self.population)))
             if infected_count !=  initial_infected:
                 person = Person(self.next_person_id, False, self.virus)
                 self.population.append(person)
                 self.next_person_id += 1
                 infected_count += 1
-                pass
             else:
                 vaxChance = random.uniform(0,1)
                 #Person vaxxed or not based off random chance
@@ -49,6 +51,7 @@ class Simulation(object):
                     self.next_person_id += 1
         self.current_infected += infected_count
         self.total_infected += infected_count
+        print("population created.")
         return population
 
     def _simulation_should_continue(self):
@@ -73,6 +76,7 @@ class Simulation(object):
             return False
 
     def run(self):
+        print("simulation running")
 
         time_step_counter = 0 # to track how many steps in we are
 
@@ -107,7 +111,7 @@ class Simulation(object):
 
                 number_of_interaction = 1 #reset number of interactions so the for loop can select another person and run again
 
-            else if person.infection is not None and person.is_alive == True:
+            elif person.infection is not None and person.is_alive == True:
                 self.logger.log_infection_survival(person, False)
 
         self._infect_newly_infected()
@@ -152,8 +156,8 @@ if __name__ == "__main__":
         initial_infected = int(params[5])
     else:
         initial_infected = 1
-        
+
     virus = Virus(virus_name, mortality_rate, basic_repro_num)
-    simulation = Simulation(pop_size, vacc_percentage, virus_name, mortality_rate,
-                            basic_repro_num, initial_infected)
+    simulation = Simulation(pop_size, vacc_percentage, virus, initial_infected)
+
     simulation.run()
