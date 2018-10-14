@@ -60,7 +60,7 @@ class Logger(object):
         # that we will store all logs in.  Be sure to use 'w' mode when you open the file.
         # For all other methods use the 'a' mode to append our new log to the end,
         # since 'w' overwrites the file.
- 
+
 
         first_line = (str(pop_size + vacc_percentage + virus_name + mortality_rate + basic_repro_num).split("\t"))
 
@@ -107,3 +107,17 @@ class Logger(object):
         self.add_to_file.write("Time step {} ended, beginning {} ...\n".format(time_step_number, time_step_number + 1))
 
         pass
+
+    def stats(self, population, total_infected):
+        total_dead = 0
+        for person in population:
+            if person.is_alive == False:
+                total_dead += 1
+            else:
+                pass
+        print("Total number infected: {}".format(total_infected))
+        print("Total number dead: {}.".format(total_dead))
+        # print("The total size of the population is {}".format(len(population)))
+
+        final_stats = open("final_stats.txt", "a")
+        final_stats.write("\nThe percentage of infected for this simulation was {}% \nThe percentage of dead for this simulation was {}% \nThe number of times someone was saved because they were vaccinated is {}".format(total_infected/len(population) * 100, total_dead/len(population) * 100, self.saved_by_vaccine))

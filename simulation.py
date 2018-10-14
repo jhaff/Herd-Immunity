@@ -88,7 +88,7 @@ class Simulation(object):
             print(time_step_counter)
             self.logger.log_time_step(time_step_counter)
             should_continue = self.should_continue() #check if sim should continue again
-        print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
+        print('The simulation has ended after {} turns.'.format(time_step_counter))
         self.logger.stats(self.population, self.total_infected)
 
     def time_step(self):
