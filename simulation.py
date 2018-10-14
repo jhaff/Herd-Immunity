@@ -16,7 +16,7 @@ class Simulation(object):
         self.next_person_id = 0
         self.virus = virus
         self.vacc_percentage = vacc_percentage
-        self.population = self._create_population(initial_infected);
+        self._create_population(initial_infected);
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus_name, population_size, vacc_percentage, initial_infected)
         self.logger = Logger(self.file_name)
 
@@ -38,6 +38,7 @@ class Simulation(object):
                 self.population.append(person)
                 self.next_person_id += 1
                 infected_count += 1
+                print("  They're infected")
             else:
                 vaxChance = random.uniform(0,1)
                 #Person vaxxed or not based off random chance
@@ -45,10 +46,12 @@ class Simulation(object):
                     person = Person(self.next_person_id, True, None)
                     self.population.append(person)
                     self.next_person_id += 1
+                    print("  They're vaccinated")
                 else: #unvaccinated person
                     person = Person(self.next_person_id, False, None)
                     self.population.append(person)
                     self.next_person_id += 1
+                    print("  They're unvaccinated")
         self.current_infected += infected_count
         self.total_infected += infected_count
         print("population created.")
@@ -71,8 +74,10 @@ class Simulation(object):
             # else:
             #     pass
         if people_alive and people_infected:
+            print("sim should continue")
             return True
         else:
+            print("sim should NOT continue")
             return False
 
     def run(self):
@@ -88,6 +93,7 @@ class Simulation(object):
             print(time_step_counter)
             self.logger.log_time_step(time_step_counter)
             should_continue = self.should_continue() #check if sim should continue again
+
         print('The simulation has ended after {} turns.'.format(time_step_counter))
         self.logger.stats(self.population, self.total_infected)
 
@@ -119,7 +125,7 @@ class Simulation(object):
 
     def interaction(self, person, random_person):
         #only living people should be passed into this method.
-        assert person1.is_alive == True
+        assert person.is_alive == True
         assert random_person.is_alive == True
 
         if random_person.is_vaccinated:
