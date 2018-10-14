@@ -92,7 +92,7 @@ class Simulation(object):
             time_step_counter += 1
             print(time_step_counter)
             self.logger.log_time_step(time_step_counter)
-            should_continue = self.should_continue() #check if sim should continue again
+            should_continue = self._simulation_should_continue() #check if sim should continue again
 
         print('The simulation has ended after {} turns.'.format(time_step_counter))
         self.logger.stats(self.population, self.total_infected)
@@ -133,8 +133,8 @@ class Simulation(object):
         if random_person.infection is not None:
              self.logger.log_interaction(person, random_person, False, False, True)
         else:
-             if random.random() < self.basic_repro_num: #if luck is bad
-                 self.newly_infected.append(random_person._id) #add 'em to the array
+             if random.random() < self.virus.repro_rate: #if luck is bad
+                 self.newly_infected.append(random_person) #add 'em to the array
                  random_person.infection = self.virus
                  self.logger.log_interaction(person, random_person, True, False, False)
              else: #lucky intereaction with no infecting!
@@ -157,13 +157,13 @@ if __name__ == "__main__":
     vacc_percentage = float(params[1])
     virus_name = str(params[2])
     mortality_rate = float(params[3])
-    basic_repro_num = float(params[4])
+    repro_rate = float(params[4])
     if len(params) == 6:
         initial_infected = int(params[5])
     else:
         initial_infected = 1
 
-    virus = Virus(virus_name, mortality_rate, basic_repro_num)
+    virus = Virus(virus_name, mortality_rate, repro_rate)
     simulation = Simulation(pop_size, vacc_percentage, virus, initial_infected)
 
     simulation.run()
