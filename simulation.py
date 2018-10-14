@@ -4,7 +4,7 @@ from person import Person
 from logger import Logger
 
 class Simulation(object):
-  
+
 
     def __init__(self, population_size, vacc_percentage, virus,
                  initial_infected=1):
@@ -14,24 +14,19 @@ class Simulation(object):
         self.current_infected = 0
         self.next_person_id = 0
         self.virus = virus
-
-        # TODO: Create a Logger object and bind it to self.logger.  You should use this
-        # logger object to log all events of any importance during the simulation.  Don't forget
-        # to call these logger methods in the corresponding parts of the simulation!
-        self.logger = None
-
-        # track of all the people that catch the infection during a given time step.
-        self.newly_infected = []
-
         self.population = self._create_population(initial_infected);
-
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus_name, population_size, vacc_percentage, initial_infected)
+        self.logger = Logger(self.file_name)
+
+        # To track of all the people that catch the infection during a given time step.
+        self.newly_infected = []
 
 
     def _create_population(self, initial_infected):
         # Returns an array filled with Person objects that matches the specifications of the
         # simulation (correct number of people in the population, correct percentage of
         # people vaccinated, correct number of initially infected people).
+        print("creating population...")
         population = []
         infected_count = 0
         while len(population) != pop_size:
@@ -59,38 +54,56 @@ class Simulation(object):
     def _simulation_should_continue(self):
         #checks whether sim should continue...
         #If everyone is dead or there are no infected people, it shouldn't.
-        if self.population_size == 0 or self.current_infected == 0:
-            return False
-        else:
+        print("checking _simulation_should_continue")
+
+        people_alive = False
+        people_infected = False
+        for person in self.population:
+            if person.is_alive == True:
+                people_alive = True
+            # else:
+            #     pass
+            if person.infection != None:
+                people_infected = True
+            # else:
+            #     pass
+        if people_alive and people_infected:
             return True
+        else:
+            return False
 
     def run(self):
 
         time_step_counter = 0 # to track how many steps in we are
 
         should_continue = self._simulation_should_continue() #check if sim should continue
+        print(should_continue)
         while should_continue:
             self.time_step()
             time_step_counter += 1
+            print(time_step_counter)
+            self.logger.log_time_step(time_step_counter)
             should_continue = self.should_continue() #check if sim should continue again
         print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
+        self.logger.stats(self.population, self.total_infected)
 
     def time_step(self):
 
         number_of_interactions = 1
 
         for person in self.population:
-            if person.infection:
-                 while number_of_interactions <= 100: # Repeat for 100 total interactions:
-                     stranger = random.choice(self.population) #grab a random person
+            if person.infection and person.is_alive == True:
+                print("running time step")
+                while number_of_interactions <= 100: # Repeat for 100 total interactions:
+                    stranger = random.choice(self.population) #grab a random person
 
                      # Prevent the person from acting on itself since we don't interact with the dead. Choose a new person.
-                     while stranger._id == person._id or stranger.is_alive is False:
+                    while stranger._id == person._id or stranger.is_alive is False:
                          stranger = random.choice(self.population)
 
-                     self.interaction(person, stranger) #conduct possible infection
+                    self.interaction(person, stranger) #conduct possible infection
 
-                     number_of_interactions += 1
+                    number_of_interactions += 1
 
                 number_of_interaction = 1 #reset number of interactions so the for loop can select another person and run again
 
