@@ -84,7 +84,12 @@ class Logger(object):
         else:
             log = "{} infected {}\n".format(person1._id, person2._id)
 
-        pass
+        self.add_to_file.write(log)
+
+
+    def log_general(self, quote):
+
+        self.add_to_file.write(quote)
 
     def log_infection_survival(self, person, did_die_from_infection):
 
@@ -94,6 +99,8 @@ class Logger(object):
         else:
             log = "{} survived from infection\n".format(person._id)
 
+
+        self.add_to_file.write(log)
 
         # The Simulation object should use this method to log
         # the results of every call of a Person object's .resolve_infection() method.

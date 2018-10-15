@@ -44,17 +44,20 @@ class Person(object):
 
     def did_survive_infection(self):
         if self.is_vaccinated is False and self.infection is None: #case for healthy person
+            print("Person {} is healthy but unvaccinated.".format(self._id))
             return None
 
         if self.infection is not None: #Was person lucky enough to live?
             luck = random.uniform(0, 1)
             if luck < self.infection.mortality_rate:  #Nope
                 self.is_alive = False
+                print("Person {} has died!".format(self._id))
                 return False
 
             else: #Yes
                 self.is_vaccinated = True #because person created own antibodies
                 self.infection = None #and cleared the infection
+                print("Person {} has Survived infection!".format(self._id))
                 return True
 
         else:

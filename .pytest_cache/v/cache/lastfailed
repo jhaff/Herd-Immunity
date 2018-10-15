@@ -1,0 +1,8 @@
+{
+  "simulation_test.py": true,
+  "simulation_test.py::SimulationTest::test_create_population_method": true,
+  "simulation_test.py::SimulationTest::test_should_continue_method": true,
+  "simulation_test.py::SimulationTest::test_should_continue_method_cure_case": true,
+  "simulation_test.py::SimulationTest::test_should_continue_method_deaths_case": true,
+  "simulation_test.py::SimulationTest::test_unique_interaction": true
+}
